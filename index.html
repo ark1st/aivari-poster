@@ -49,16 +49,25 @@
   .vswitch button .vsub{display:block; font-size:.68rem; font-weight:600; opacity:.8; margin-top:1px}
 
   main{padding:22px 0 120px}
-  .hero{background:linear-gradient(135deg,var(--brand),#3a63e6); color:#fff; border-radius:20px; padding:26px 24px; box-shadow:var(--shadow); position:relative; overflow:hidden;}
+  .hero{background:linear-gradient(135deg,var(--brand),#3a63e6); color:#fff; border-radius:18px; padding:18px 20px; box-shadow:var(--shadow); position:relative; overflow:hidden;}
   .hero:after{content:""; position:absolute; right:-40px; top:-40px; width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.08)}
   .hero .eyebrow{opacity:.85; font-weight:700; font-size:.8rem; letter-spacing:.08em; text-transform:uppercase}
-  .hero h1{margin:.35em 0 .3em; font-size:1.5rem; letter-spacing:-.02em; line-height:1.25}
+  .hero h1{margin:.3em 0 .25em; font-size:1.22rem; letter-spacing:-.02em; line-height:1.3}
   .hero p{margin:0; opacity:.95; font-size:1.02rem}
   .hero .meta{margin-top:14px; font-size:.82rem; opacity:.85; display:flex; flex-wrap:wrap; gap:6px 16px}
 
   .nav{display:flex; gap:8px; flex-wrap:wrap; margin:20px 0 8px}
   .nav a{font-size:.85rem; font-weight:700; text-decoration:none; color:var(--muted); background:var(--panel); border:1px solid var(--line); padding:8px 12px; border-radius:999px}
   .nav a:hover{color:var(--brand); border-color:var(--brand)}
+
+  .bar2{display:flex; gap:8px; padding:0 0 10px; align-items:center}
+  .bar2 .search{flex:1; min-width:0; padding:9px 14px; font-size:.9rem}
+  .tabs{display:flex; gap:6px; flex:none; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tabs button{border:1px solid var(--line); background:var(--panel); color:var(--muted); font-weight:750; font-size:.84rem; padding:8px 12px; border-radius:999px; cursor:pointer; white-space:nowrap}
+  .tabs button.on{background:var(--brand); color:#fff; border-color:var(--brand)}
+  .tabpanel[hidden]{display:none}
+  @media (max-width:560px){ .bar2{flex-wrap:wrap} .tabs{width:100%} }
 
   section.block{margin-top:26px}
   .block-h{display:flex; align-items:center; gap:10px; margin:0 0 12px}
@@ -190,100 +199,98 @@
     </div>
     <button class="iconbtn" onclick="toggleTheme()" title="라이트/다크" id="themeBtn">🌙</button>
   </div>
+  <div class="wrap bar2" id="studybar">
+    <input class="search" id="qaSearch" placeholder="🔎 검색: 질문·지표·키워드 (NPV, tool, ANKRD11, 자동…)" oninput="onSearch()" />
+    <div class="tabs" id="tabs">
+      <button data-tab="deck" class="on" onclick="showTab('deck')">🎤 대본</button>
+      <button data-tab="map" onclick="showTab('map')">🗺️ 지도</button>
+      <button data-tab="num" onclick="showTab('num')">📊 숫자·지표</button>
+      <button data-tab="qa" onclick="showTab('qa')">💬 Q&amp;A</button>
+    </div>
+  </div>
 </header>
 
 <main class="wrap" id="study">
 
   <div class="hero">
-    <div class="eyebrow">Core message · 내일의 무기 한 문장</div>
-    <h1>임상의를 대체하는 시스템이 아니라, <br>놓칠 수 있는 reportable finding을 줄이는 <u>의사결정 보조 도구</u>입니다.</h1>
+    <div class="eyebrow">Core message · 한 문장</div>
+    <h1>임상의를 대체하는 게 아니라, 놓칠 수 있는 reportable finding을 줄이는 <u>의사결정 보조 도구</u>입니다.</h1>
     <p>A sensitivity-first decision support that keeps the clinician in the loop.</p>
-    <div class="meta">
-      <span>📄 AIVARI Agent · ICML 2026 · 3billion</span>
-      <span>👤 Min Kang</span>
-      <span>🗺️ 포스터 순서대로 · 쉬운 / 정식 / 한국어</span>
-    </div>
   </div>
 
-  <nav class="nav">
-    <a href="#map">🗺️ 포스터 지도</a>
-    <a href="#deck">🎤 포스터 대본</a>
-    <a href="#metrics">📊 숫자</a>
-    <a href="#metricx">📐 지표 설명</a>
-    <a href="#memo">🧠 외울 문장</a>
-    <a href="#qa">💬 예상 Q&amp;A</a>
-    <a href="#sos">🆘 급할 때</a>
-  </nav>
-
-  <!-- poster map -->
-  <section class="block" id="map">
-    <div class="block-h"><div class="ix">🗺️</div><h2>포스터 지도</h2><span class="tag">칸을 누르면 발표 모드로 점프</span></div>
-    <div class="pmap">
-      <div class="pm-title"><span>AIVARI Agent — Title</span><span class="qr">QR ▧</span></div>
-      <div class="pm-row">
-        <div class="pm-col" style="flex:1">
-          <div class="pm-zone" onclick="openAt(1)">❶ Background<small>왼쪽 위 · 문제</small></div>
-          <div class="pm-zone" onclick="openAt(2)">❷ Contributions<small>왼쪽 중간 · 기여 3가지</small></div>
-        </div>
-        <div class="pm-col" style="flex:1">
-          <div class="pm-zone" onclick="openAt(3)" style="height:100%">❸ Problem formulation<small>오른쪽 위 · 문제 정의(수식)</small></div>
-        </div>
+  <!-- TAB: 대본 -->
+  <div class="tabpanel" data-panel="deck">
+    <section class="block" id="deck">
+      <div class="block-h"><div class="ix">🎤</div><h2>포스터 대본</h2><span class="tag">포스터 순서대로</span></div>
+      <div class="verbar">
+        <span class="lbl">버전 선택</span>
+        <div class="vswitch" id="verStudy"></div>
+        <div class="desc" id="verDesc"></div>
       </div>
-      <div class="pm-band" onclick="openAt(4)">Figure 1 · System — STEP 1 → 2 → 3 → 4 → 5</div>
-      <div class="pm-zone" onclick="openAt(5)" style="margin-top:8px">❹ Case study<small>가운데 아래 · 12세 남아, ANKRD11×KBG 예시</small></div>
-      <div class="pm-results">
-        <div class="pm-zone" onclick="openAt(6)">❺ Results ①<small>Group Sensitivity</small></div>
-        <div class="pm-zone" onclick="openAt(6)">❺ Results ②<small>Group NPV</small></div>
-        <div class="pm-zone" onclick="openAt(6)">❺ Results ③<small>Row Precision</small></div>
+      <div id="deckStudy"></div>
+    </section>
+  </div>
+
+  <!-- TAB: 지도 -->
+  <div class="tabpanel" data-panel="map" hidden>
+    <section class="block" id="map">
+      <div class="block-h"><div class="ix">🗺️</div><h2>포스터 지도</h2><span class="tag">칸을 누르면 발표 모드로 점프</span></div>
+      <div class="pmap">
+        <div class="pm-title"><span>AIVARI Agent — Title</span><span class="qr">QR ▧</span></div>
+        <div class="pm-row">
+          <div class="pm-col" style="flex:1">
+            <div class="pm-zone" onclick="openAt(1)">❶ Background<small>왼쪽 위 · 문제</small></div>
+            <div class="pm-zone" onclick="openAt(2)">❷ Contributions<small>왼쪽 중간 · 기여 3가지</small></div>
+          </div>
+          <div class="pm-col" style="flex:1">
+            <div class="pm-zone" onclick="openAt(3)" style="height:100%">❸ Problem formulation<small>오른쪽 위 · 문제 정의(수식)</small></div>
+          </div>
+        </div>
+        <div class="pm-band" onclick="openAt(4)">Figure 1 · System — STEP 1 → 2 → 3 → 4 → 5</div>
+        <div class="pm-zone" onclick="openAt(5)" style="margin-top:8px">❹ Case study<small>가운데 아래 · 12세 남아, ANKRD11×KBG 예시</small></div>
+        <div class="pm-results">
+          <div class="pm-zone" onclick="openAt(6)">❺ Results ①<small>Group Sensitivity</small></div>
+          <div class="pm-zone" onclick="openAt(6)">❺ Results ②<small>Group NPV</small></div>
+          <div class="pm-zone" onclick="openAt(6)">❺ Results ③<small>Row Precision</small></div>
+        </div>
+        <div class="pm-zone" onclick="openAt(7)" style="margin-top:8px">❻ Conclusion<small>맨 아래 · 결론</small></div>
+        <div class="pm-hint">발표 땐 이 순서로 손으로 짚어가며 설명하세요. 각 대본 카드에 📍위치가 표시됩니다.</div>
       </div>
-      <div class="pm-zone" onclick="openAt(7)" style="margin-top:8px">❻ Conclusion<small>맨 아래 · 결론</small></div>
-      <div class="pm-hint">발표 땐 이 순서로 손으로 짚어가며 설명하세요. 각 대본 카드에 📍위치가 표시됩니다.</div>
-    </div>
-  </section>
+    </section>
+  </div>
 
-  <!-- deck -->
-  <section class="block" id="deck">
-    <div class="block-h"><div class="ix">🎤</div><h2>포스터 대본</h2><span class="tag">포스터 순서대로</span></div>
-    <div class="verbar">
-      <span class="lbl">버전 선택</span>
-      <div class="vswitch" id="verStudy"></div>
-      <div class="desc" id="verDesc"></div>
-    </div>
-    <div id="deckStudy"></div>
-  </section>
+  <!-- TAB: 숫자·지표 -->
+  <div class="tabpanel" data-panel="num" hidden>
+    <section class="block" id="metrics">
+      <div class="block-h"><div class="ix">📊</div><h2>결과 숫자 (외우기 쉽게)</h2><span class="tag">300 cases · 6,460 hyp.</span></div>
+      <div class="mgrid" id="mgrid"></div>
+      <div class="note" id="metricNote"></div>
+    </section>
 
-  <!-- metrics -->
-  <section class="block" id="metrics">
-    <div class="block-h"><div class="ix">📊</div><h2>결과 숫자 (외우기 쉽게)</h2><span class="tag">300 cases · 6,460 hyp.</span></div>
-    <div class="mgrid" id="mgrid"></div>
-    <div class="note" id="metricNote"></div>
-  </section>
+    <section class="block" id="metricx">
+      <div class="block-h"><div class="ix">📐</div><h2>지표 설명 (그대로 말해도 됨)</h2><span class="tag">Group=환자 · Row=가설</span></div>
+      <div class="note" style="margin-bottom:12px"><b>단위가 핵심:</b> Group = 환자(케이스) 단위, Row = 가설(줄) 단위. 그래서 Sensitivity·NPV는 "이 환자를 잡았나 / 안심해도 되나", Row Precision은 "각 줄이 맞았나(검토 부담)"를 봅니다.</div>
+      <div class="mem" id="mxList"></div>
+    </section>
 
-  <!-- metrics explained -->
-  <section class="block" id="metricx">
-    <div class="block-h"><div class="ix">📐</div><h2>지표 설명 (그대로 말해도 됨)</h2><span class="tag">Group=환자 · Row=가설</span></div>
-    <div class="note" style="margin-bottom:12px"><b>단위가 핵심:</b> Group = 환자(케이스) 단위, Row = 가설(줄) 단위. 그래서 Sensitivity·NPV는 "이 환자를 잡았나 / 안심해도 되나", Row Precision은 "각 줄이 맞았나(검토 부담)"를 봅니다.</div>
-    <div class="mem" id="mxList"></div>
-  </section>
+    <section class="block" id="memo">
+      <div class="block-h"><div class="ix">🧠</div><h2>반드시 외울 문장</h2><span class="tag">이것만은</span></div>
+      <div class="mem" id="mem"></div>
+    </section>
+  </div>
 
-  <!-- memorize -->
-  <section class="block" id="memo">
-    <div class="block-h"><div class="ix">🧠</div><h2>반드시 외울 문장</h2><span class="tag">이것만은</span></div>
-    <div class="mem" id="mem"></div>
-  </section>
+  <!-- TAB: Q&A -->
+  <div class="tabpanel" data-panel="qa" hidden>
+    <section class="block" id="qa">
+      <div class="block-h"><div class="ix">💬</div><h2>예상 Q&amp;A</h2><span class="tag">위 검색창으로 바로 필터</span></div>
+      <div id="qaList"></div>
+    </section>
 
-  <!-- Q&A -->
-  <section class="block" id="qa">
-    <div class="block-h"><div class="ix">💬</div><h2>예상 Q&amp;A</h2><span class="tag">질문 오면 검색</span></div>
-    <input class="search" id="qaSearch" placeholder="🔎 키워드 검색 (예: case study, ANKRD11, precision, tool, 자동)" oninput="filterQA()" />
-    <div id="qaList"></div>
-  </section>
-
-  <!-- SOS inline -->
-  <section class="block" id="sos">
-    <div class="block-h"><div class="ix">🆘</div><h2>급할 때 쓰는 문장</h2><span class="tag">우측 하단 버튼으로도</span></div>
-    <div class="card" id="sosInline"></div>
-  </section>
+    <section class="block" id="sos">
+      <div class="block-h"><div class="ix">🆘</div><h2>급할 때 쓰는 문장</h2><span class="tag">우측 하단 버튼으로도</span></div>
+      <div class="card" id="sosInline"></div>
+    </section>
+  </div>
 
   <div class="foot">천천히 해도 괜찮아요. 이 페이지는 오프라인에서도 열립니다. · Break a leg, Min Kang 🍀</div>
 </main>
@@ -450,60 +457,60 @@ const DECK_EASY = [
 
 const DECK_KO = [
   { title:"제목 / 오프닝", icon:"👋", point:"맨 위 — 제목 & QR", lines:[
-    {en:"안녕하세요, 쓰리빌리언의 Min Kang입니다.", ko:"Hi, I'm Min Kang from 3billion."},
-    {en:"이 포스터는 AIVARI Agent입니다 — 변이 reportability와 해석을 위한 evidence-grounded agentic LLM입니다.", ko:"agentic LLM for variant reportability & interpretation", key:true},
+    {en:"안녕하세요, 쓰리빌리언의 강민입니다.", ko:"Hi, I'm Min Kang from 3billion."},
+    {en:"저희 포스터 AIVARI Agent를 소개하겠습니다. 변이가 보고할 만한지 판단하고 해석하는, 근거 기반 에이전트형 LLM입니다.", ko:"agentic LLM for variant reportability & interpretation", key:true},
   ], note:"한국어 발표나 한국인 참석자 대응용. 제목을 짚으며 시작." },
 
   { title:"❶ Background", icon:"❶", point:"왼쪽 위 — ❶ Background", lines:[
-    {en:"임상 유전 진단에서는 한 환자에 수십 개의 후보 변이가 있습니다.", ko:"dozens of candidate variants per patient", key:true},
-    {en:"각 (gene, disease)마다 변이 근거·표현형·유전 양식·DB 근거를 따져 reportability를 판단합니다.", ko:"weigh evidence → reportability"},
-    {en:"이 판단은 검토 비용 한도 안에서 sensitivity를 우선합니다.", ko:"sensitivity-first, bounded cost"},
+    {en:"임상 유전 진단에서는 환자 한 명에게 후보 변이가 수십 개씩 나옵니다.", ko:"dozens of candidate variants per patient", key:true},
+    {en:"임상의는 변이마다 그 근거와 증상이 맞는지, 유전 양식, 그리고 OMIM·ClinVar 같은 데이터베이스 근거까지 함께 따져서 보고할지를 판단합니다.", ko:"weigh evidence → reportability"},
+    {en:"게다가 검토할 수 있는 양은 정해져 있어서, 무엇보다 놓치지 않는 걸 우선해야 합니다.", ko:"sensitivity-first, bounded cost"},
   ]},
 
   { title:"❷ Contributions", icon:"❷", point:"왼쪽 중간 — ❷ Contributions", lines:[
-    {en:"세 가지 기여입니다.", ko:"three contributions"},
-    {en:"① 변이 해석을 (gene, disease) 가설에 대한 환자 단위 multi-hypothesis reportability 문제로 정의.", ko:"multi-hypothesis reportability", key:true},
-    {en:"② 한 유전자의 모든 (gene, disease)를 한 번의 rollout에서 평가하는 single-rollout agent.", ko:"variant-anchored single rollout", key:true},
-    {en:"③ 임상의 리포트를 정답으로 300 케이스 평가 + tool ablation + head-to-head.", ko:"300 cases · clinician ground truth"},
+    {en:"저희 연구의 기여는 세 가지입니다.", ko:"three contributions"},
+    {en:"첫째, 변이 해석을 한 환자에 대한 여러 유전자·질환 가설의 보고 여부를 함께 판단하는 문제로 새로 정의했습니다.", ko:"multi-hypothesis reportability", key:true},
+    {en:"둘째, 한 유전자에 딸린 모든 가설을 한 번의 실행으로 평가하고, 필요할 때 근거 도구를 부르는 에이전트를 만들었습니다.", ko:"variant-anchored single rollout", key:true},
+    {en:"셋째, 임상의가 쓴 리포트를 정답으로 삼아 실제 300개 케이스에서 평가했고, 도구 유무 비교와 기존 파이프라인과의 정면 비교도 했습니다.", ko:"300 cases · clinician ground truth"},
   ]},
 
   { title:"❸ Problem formulation", icon:"❸", point:"오른쪽 위 — ❸ Problem formulation", lines:[
-    {en:"형식적 정의는 쉽게 말하면요.", ko:"formal definition, in short"},
-    {en:"한 케이스에서 모든 (gene, disease) pair가 가설 공간입니다.", ko:"hypothesis space = all (g,d)"},
-    {en:"최소 하나의 pair가 reportable이면 그 케이스는 reportable입니다.", ko:"≥1 reportable → case reportable", key:true},
+    {en:"여기 수식이 있는데, 쉽게 말씀드리면 이렇습니다.", ko:"formal definition, in short"},
+    {en:"한 케이스에서 후보 유전자들이 만드는 모든 유전자·질환 조합이 가설이 됩니다.", ko:"hypothesis space = all (g,d)"},
+    {en:"그중 하나라도 보고 대상이면, 그 환자 케이스를 보고 대상으로 봅니다.", ko:"≥1 reportable → case reportable", key:true},
   ]},
 
   { title:"Figure 1 · System", icon:"⚙️", point:"가운데 띠 — Figure 1 (STEP 1~5)", lines:[
-    {en:"이 그림이 전체 파이프라인을 5단계로 보여줍니다.", ko:"pipeline in 5 steps"},
-    {en:"STEP 1 입력: HPO 표현형, 변이 콜, 가족력.", ko:"input: HPO · variants · family history"},
-    {en:"STEP 2 후보 생성: ACMG 규칙 + 표현형 ML ranker → 상위 약 10개 유전자.", ko:"candidate generation → top ~10 genes"},
-    {en:"STEP 3 핵심: 유전자마다 한 번의 rollout에서 OMIM·ClinVar·변이 tool로 모든 가설 평가.", ko:"per-gene single rollout + tools", key:true},
-    {en:"STEP 4 출력: Positive / Inconclusive / Negative 결정 + reasoning trace (JSON).", ko:"JSON decision + reasoning trace"},
-    {en:"STEP 5 취합: 유전자별 출력을 모아 케이스 결정.", ko:"aggregate → case decision"},
+    {en:"이 그림이 전체 과정을 다섯 단계로 보여줍니다.", ko:"pipeline in 5 steps"},
+    {en:"1단계는 입력입니다. 환자의 HPO 증상, 변이 목록, 가족력이 들어갑니다.", ko:"input: HPO · variants · family history"},
+    {en:"2단계는 후보를 추립니다. ACMG 규칙으로 우선순위를 매기고 표현형 기반 모델로 순위를 매겨, 상위 열 개 정도의 유전자를 남깁니다.", ko:"candidate generation → top ~10 genes"},
+    {en:"3단계가 핵심입니다. 유전자 하나마다 한 번의 실행 안에서 OMIM, ClinVar, 변이 상세 도구를 불러가며 관련된 모든 가설을 평가합니다.", ko:"per-gene single rollout + tools", key:true},
+    {en:"4단계는 출력입니다. 실행마다 Positive, Inconclusive, Negative 중 하나의 판정과 판단 근거를 함께 냅니다.", ko:"JSON decision + reasoning trace"},
+    {en:"5단계에서는 유전자별 결과를 모아 케이스 전체의 보고 여부를 정합니다.", ko:"aggregate → case decision"},
   ]},
 
   { title:"❹ Case study", icon:"❹", point:"가운데 아래 — ❹ Case study (표)", lines:[
-    {en:"이 case study가 구체적으로 보여줍니다.", ko:"a concrete example"},
-    {en:"12세 남아, exome. 신장 표현형(SRNS·FSGS)에 얼굴·사지 특징.", ko:"12y boy · kidney + facial features"},
-    {en:"ranker가 10개 유전자, 14개 (gene, disease) 가설 선택.", ko:"10 genes · 14 hypotheses"},
-    {en:"뻔한 신장 유전자(WT1·NPHS1·NPHS2·COL4A5·TRPC6)는 모두 Not Reportable.", ko:"obvious kidney genes → all NR"},
-    {en:"하나가 Reportable: ANKRD11 · KBG 증후군 — frameshift, likely pathogenic, 얼굴 gestalt 적합.", ko:"ANKRD11 × KBG → Reportable", key:true},
-    {en:"14개 중 1개가 reportable → 케이스 reportable, 임상의 서명 리포트와 일치.", ko:"1/14 → matches signed report", key:true},
+    {en:"이 사례를 보면 훨씬 구체적으로 와닿습니다.", ko:"a concrete example"},
+    {en:"12세 남자아이의 엑솜 검사입니다. SRNS, FSGS 같은 신장 증상에, 얼굴과 손발 특징이 함께 있었습니다.", ko:"12y boy · kidney + facial features"},
+    {en:"모델이 후보 유전자 열 개와, 유전자·질환 가설 열네 개를 골랐습니다.", ko:"10 genes · 14 hypotheses"},
+    {en:"언뜻 의심되는 신장 유전자들, WT1·NPHS1·NPHS2·COL4A5·TRPC6는 모두 보고 대상이 아니라고 나왔습니다.", ko:"obvious kidney genes → all NR"},
+    {en:"그런데 하나가 보고 대상으로 떴습니다. ANKRD11 유전자의 KBG 증후군인데, frameshift 변이에 likely pathogenic이고 얼굴 특징이 잘 맞았습니다.", ko:"ANKRD11 × KBG → Reportable", key:true},
+    {en:"결국 열네 개 중 하나가 보고 대상이라 케이스도 보고 대상이 됐고, 이건 임상의가 서명한 실제 리포트와 정확히 일치했습니다.", ko:"1/14 → matches signed report", key:true},
   ], note:"표의 초록색 R(ANKRD11)을 짚으며 설명하면 강렬함." },
 
   { title:"❺ Results", icon:"❺", point:"아래 — ❺ Results (막대그래프 3개)", lines:[
-    {en:"결과는 세 가지입니다.", ko:"three results"},
-    {en:"300케이스 tool ablation: Group NPV 90→93%, silent miss 8→5 / 200.", ko:"tools: NPV↑, silent miss 8→5", key:true},
-    {en:"235케이스 head-to-head: Group Sensitivity 95.6%, Group NPV 86.7%로 hybrid pipeline 대비 우위, 검토 부담은 비슷.", ko:"95.6% / 86.7%, beats hybrids", key:true},
-    {en:"리포트 클래스별: Positive 100%, 가장 어려운 Inconclusive 90% (운영 파이프라인 25%·39%).", ko:"POS 100% · INC 90%", key:true},
+    {en:"결과는 크게 세 가지입니다.", ko:"three results"},
+    {en:"첫째, 300개 케이스에서 도구를 넣고 뺀 비교입니다. 근거 도구를 더하니 Group NPV가 90%에서 93%로 오르고, 놓친 케이스가 200개 중 8개에서 5개로 줄었습니다.", ko:"tools: NPV↑, silent miss 8→5", key:true},
+    {en:"둘째, 235개 케이스에서 기존 파이프라인들과 정면 비교했습니다. AIVARI는 Group Sensitivity 95.6%, Group NPV 86.7%로 앞서면서, 검토 부담은 비슷했습니다.", ko:"95.6% / 86.7%, beats hybrids", key:true},
+    {en:"셋째, 리포트 종류별로 보면 Positive는 100% 잡아냈고, 가장 어려운 Inconclusive에서도 90%로, 기존 파이프라인의 25%, 39%보다 훨씬 높았습니다.", ko:"POS 100% · INC 90%", key:true},
   ]},
 
   { title:"❻ Conclusion", icon:"❻", point:"맨 아래 — ❻ Conclusion", lines:[
-    {en:"결론입니다.", ko:"conclusion"},
-    {en:"evidence-grounded agentic LLM이 유전자당 한 번의 rollout로 임상에 부합하는 reportability 추론을 합니다.", ko:"single per-gene rollout works"},
-    {en:"case 검출과 rule-out을 개선, 특히 inconclusive에서 가장 큰 향상.", ko:"biggest gains on inconclusive", key:true},
-    {en:"임상의를 중심에 두는 sensitivity-first 의사결정 지원입니다.", ko:"sensitivity-first · clinician in the loop", key:true},
-    {en:"감사합니다. 질문 환영합니다.", ko:"Thank you. Happy to take questions."},
+    {en:"정리하겠습니다.", ko:"conclusion"},
+    {en:"근거 기반 에이전트 LLM이, 유전자당 단 한 번의 실행만으로 임상 기준에 맞는 판단을 해낼 수 있다는 것을 보였습니다.", ko:"single per-gene rollout works"},
+    {en:"케이스를 잡아내는 능력과 안전하게 배제하는 능력을 모두 개선했고, 특히 애매한 Inconclusive 케이스에서 가장 크게 좋아졌습니다.", ko:"biggest gains on inconclusive", key:true},
+    {en:"무엇보다 최종 판단은 임상의가 하도록, 놓칠 만한 소견을 줄여 돕는 의사결정 보조 도구입니다.", ko:"sensitivity-first · clinician in the loop", key:true},
+    {en:"감사합니다. 질문 있으시면 편하게 해주세요.", ko:"Thank you. Happy to take questions."},
   ]},
 ];
 
@@ -805,6 +812,17 @@ function fontStep(d){ fs=Math.min(3.2,Math.max(1.2,fs+d*0.2)); document.document
 function openSheet(){ $("#sheet").classList.add("show"); }
 function closeSheet(){ $("#sheet").classList.remove("show"); }
 
+function showTab(name, noScroll){
+  document.querySelectorAll(".tabpanel").forEach(p=>{ p.hidden = p.dataset.panel!==name; });
+  document.querySelectorAll("#tabs button").forEach(b=>b.classList.toggle("on", b.dataset.tab===name));
+  if(!noScroll) window.scrollTo(0,0);
+}
+function onSearch(){
+  const on = document.querySelector("#tabs button.on");
+  if($("#qaSearch").value.trim() && (!on || on.dataset.tab!=="qa")) showTab("qa", true);
+  filterQA();
+}
+
 document.addEventListener("keydown", e=>{
   if(!$("#presenter").classList.contains("show")) return;
   if(e.key==="ArrowRight"||e.key===" "||e.key==="PageDown"){e.preventDefault();go(1);}
@@ -818,7 +836,7 @@ document.addEventListener("keydown", e=>{
     const f=parseFloat(localStorage.getItem("aivari-fs")); if(f){fs=f;document.documentElement.style.setProperty("--en-size",fs+"rem");}
     const v=localStorage.getItem("aivari-ver"); if(v && VERSIONS[v]) curVer=v;
   }catch(e){}
-  renderVerSwitch(); renderStudyDeck();
+  renderVerSwitch(); renderStudyDeck(); showTab("deck");
 })();
 </script>
 </body>
