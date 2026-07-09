@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>AIVARI Agent — 발표 컨닝페이퍼</title>
+<style>
+  :root{
+    --bg:#f6f7fb; --panel:#ffffff; --ink:#111827; --muted:#5b6472;
+    --line:#e6e8ef; --brand:#1f4bd8; --brand-soft:#eaf0ff;
+    --teal:#0e9f8f; --amber:#b7791f; --amber-soft:#fdf3e2;
+    --pos:#0e9f8f; --warn:#b7791f; --neg:#8a94a6;
+    --shadow:0 1px 3px rgba(16,24,40,.06),0 8px 24px rgba(16,24,40,.05);
+    --radius:16px; --maxw:920px;
+    --en-size:1.9rem;
+  }
+  [data-theme="dark"]{
+    --bg:#0d1117; --panel:#151b24; --ink:#eef2f7; --muted:#9aa4b2;
+    --line:#232c39; --brand:#6f92ff; --brand-soft:#182238;
+    --teal:#3fd6c4; --amber:#e6b45a; --amber-soft:#2a2415;
+    --pos:#3fd6c4; --warn:#e6b45a; --neg:#7e8898;
+    --shadow:0 1px 3px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Pretendard","Apple SD Gothic Neo",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans KR",sans-serif;
+    line-height:1.55; -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--brand)}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 18px}
+
+  /* ---------- Top bar ---------- */
+  header{
+    position:sticky; top:0; z-index:40; background:color-mix(in srgb,var(--bg) 88%, transparent);
+    backdrop-filter:saturate(1.4) blur(10px); border-bottom:1px solid var(--line);
+  }
+  .bar{display:flex; align-items:center; gap:10px; padding:10px 0}
+  .brandmark{font-weight:800; letter-spacing:-.01em; font-size:1.02rem; display:flex; align-items:center; gap:8px; white-space:nowrap}
+  .dot{width:10px;height:10px;border-radius:50%;background:var(--brand);box-shadow:0 0 0 4px var(--brand-soft)}
+  .spacer{flex:1}
+  .seg{display:inline-flex; background:var(--panel); border:1px solid var(--line); border-radius:999px; padding:3px; box-shadow:var(--shadow)}
+  .seg button{border:0; background:transparent; color:var(--muted); font-weight:700; font-size:.86rem; padding:7px 14px; border-radius:999px; cursor:pointer}
+  .seg button.on{background:var(--brand); color:#fff}
+  .iconbtn{border:1px solid var(--line); background:var(--panel); color:var(--ink); width:38px;height:38px;border-radius:10px;cursor:pointer;font-size:1.05rem;box-shadow:var(--shadow)}
+
+  /* ---------- Study mode ---------- */
+  main{padding:22px 0 120px}
+  .hero{
+    background:linear-gradient(135deg,var(--brand),#3a63e6); color:#fff; border-radius:20px;
+    padding:26px 24px; box-shadow:var(--shadow); position:relative; overflow:hidden;
+  }
+  .hero:after{content:""; position:absolute; right:-40px; top:-40px; width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.08)}
+  .hero .eyebrow{opacity:.85; font-weight:700; font-size:.8rem; letter-spacing:.08em; text-transform:uppercase}
+  .hero h1{margin:.35em 0 .3em; font-size:1.55rem; letter-spacing:-.02em; line-height:1.25}
+  .hero p{margin:0; opacity:.95; font-size:1.02rem}
+  .hero .meta{margin-top:14px; font-size:.82rem; opacity:.85; display:flex; flex-wrap:wrap; gap:6px 16px}
+
+  .nav{display:flex; gap:8px; flex-wrap:wrap; margin:20px 0 8px}
+  .nav a{font-size:.85rem; font-weight:700; text-decoration:none; color:var(--muted); background:var(--panel); border:1px solid var(--line); padding:8px 12px; border-radius:999px}
+  .nav a:hover{color:var(--brand); border-color:var(--brand)}
+
+  section.block{margin-top:26px}
+  .block-h{display:flex; align-items:center; gap:10px; margin:0 0 12px}
+  .block-h .ix{width:30px;height:30px;flex:none;border-radius:9px;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center;font-weight:800;font-size:.9rem}
+  .block-h h2{margin:0; font-size:1.18rem; letter-spacing:-.01em}
+  .block-h .tag{margin-left:auto; font-size:.72rem; font-weight:700; color:var(--muted); background:var(--panel); border:1px solid var(--line); padding:3px 9px; border-radius:999px}
+
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden}
+  .line{padding:14px 18px; border-bottom:1px solid var(--line)}
+  .line:last-child{border-bottom:0}
+  .line .en{font-size:1.06rem; font-weight:650; letter-spacing:-.01em}
+  .line .ko{margin-top:3px; color:var(--muted); font-size:.92rem}
+  .line.key{background:linear-gradient(90deg,var(--brand-soft),transparent)}
+  .line.key .en:before{content:"★ "; color:var(--brand)}
+
+  .note{margin-top:10px; font-size:.86rem; color:var(--muted); background:var(--amber-soft); border:1px solid color-mix(in srgb,var(--amber) 30%, var(--line)); border-radius:12px; padding:10px 13px}
+  .note b{color:var(--amber)}
+
+  /* metrics */
+  .mgrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px}
+  .metric{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:16px; box-shadow:var(--shadow)}
+  .metric .v{font-size:2rem; font-weight:850; letter-spacing:-.03em; line-height:1}
+  .metric .n{margin-top:6px; font-weight:750; font-size:.92rem}
+  .metric .d{margin-top:4px; color:var(--muted); font-size:.82rem}
+  .metric.sens .v{color:var(--pos)} .metric.npv .v{color:var(--brand)} .metric.prec .v{color:var(--warn)}
+
+  /* memorize */
+  .mem{display:grid; gap:12px}
+  .memcard{background:var(--panel); border:1px solid var(--line); border-left:4px solid var(--brand); border-radius:12px; padding:14px 16px; box-shadow:var(--shadow)}
+  .memcard .lab{font-size:.72rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--brand)}
+  .memcard .en{margin-top:6px; font-size:1.08rem; font-weight:700}
+  .memcard .ko{margin-top:4px; color:var(--muted); font-size:.9rem}
+
+  /* Q&A */
+  .search{width:100%; padding:13px 16px; font-size:1rem; border:1px solid var(--line); border-radius:12px; background:var(--panel); color:var(--ink); box-shadow:var(--shadow)}
+  .search:focus{outline:2px solid var(--brand); border-color:var(--brand)}
+  details.qa{background:var(--panel); border:1px solid var(--line); border-radius:12px; margin-top:10px; box-shadow:var(--shadow); overflow:hidden}
+  details.qa summary{list-style:none; cursor:pointer; padding:14px 16px; font-weight:750; display:flex; gap:10px; align-items:flex-start}
+  details.qa summary::-webkit-details-marker{display:none}
+  details.qa summary .q{flex:1}
+  details.qa summary .q .qko{display:block; color:var(--muted); font-weight:500; font-size:.85rem; margin-top:2px}
+  details.qa summary .chev{color:var(--muted); transition:transform .2s}
+  details.qa[open] summary .chev{transform:rotate(90deg)}
+  details.qa .abody{padding:0 16px 14px; border-top:1px solid var(--line)}
+  details.qa .abody .line{padding:12px 0; border-bottom:1px dashed var(--line)}
+  details.qa .abody .line:last-child{border-bottom:0}
+  details.qa .abody .en{font-size:1rem}
+
+  /* ---------- Presenter mode ---------- */
+  #presenter{display:none; position:fixed; inset:0; z-index:60; background:var(--bg); flex-direction:column}
+  #presenter.show{display:flex}
+  .pbar{display:flex; align-items:center; gap:8px; padding:12px 16px; border-bottom:1px solid var(--line); background:var(--panel)}
+  .pbar .ptitle{font-weight:800; font-size:.95rem; color:var(--brand)}
+  .pbar .ppos{color:var(--muted); font-size:.85rem; font-weight:700}
+  .fs{display:inline-flex; gap:4px}
+  .fs button{width:34px;height:34px;border-radius:9px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-weight:800;cursor:pointer}
+  .pstage{flex:1; overflow:auto; display:flex; align-items:center; justify-content:center; padding:30px 20px}
+  .pcard{max-width:860px; width:100%}
+  .pchip{display:inline-flex; align-items:center; gap:8px; font-weight:800; font-size:.8rem; letter-spacing:.05em; text-transform:uppercase; color:var(--brand); background:var(--brand-soft); padding:6px 12px; border-radius:999px; margin-bottom:20px}
+  .pline{padding:16px 0; border-bottom:1px solid var(--line)}
+  .pline:last-child{border-bottom:0}
+  .pline .en{font-size:var(--en-size); font-weight:700; letter-spacing:-.02em; line-height:1.32}
+  .pline .ko{margin-top:8px; color:var(--muted); font-size:calc(var(--en-size) * .55)}
+  .pline.key .en{color:var(--brand)}
+  .pnote{margin-top:18px; font-size:.95rem; color:var(--muted); background:var(--amber-soft); border-radius:12px; padding:12px 15px; border:1px solid color-mix(in srgb,var(--amber) 30%, var(--line))}
+  .pnav{display:flex; align-items:center; gap:12px; padding:14px 16px calc(14px + env(safe-area-inset-bottom)); border-top:1px solid var(--line); background:var(--panel)}
+  .pnav button.move{flex:1; padding:16px; border-radius:14px; border:0; font-size:1.05rem; font-weight:800; cursor:pointer; background:var(--brand); color:#fff}
+  .pnav button.move.ghost{background:var(--panel); color:var(--ink); border:1px solid var(--line)}
+  .pnav button:disabled{opacity:.35}
+  .dots{display:flex; gap:6px; justify-content:center; padding:0 16px 10px; flex-wrap:wrap; background:var(--panel)}
+  .dots i{width:9px;height:9px;border-radius:50%;background:var(--line); cursor:pointer}
+  .dots i.on{background:var(--brand); transform:scale(1.25)}
+
+  /* ---------- SOS floating ---------- */
+  .sos{position:fixed; right:16px; bottom:calc(16px + env(safe-area-inset-bottom)); z-index:70; width:60px;height:60px;border-radius:50%; border:0; background:var(--amber); color:#fff; font-size:.72rem; font-weight:900; cursor:pointer; box-shadow:0 8px 24px rgba(0,0,0,.25); line-height:1.1}
+  .sheet{position:fixed; inset:0; z-index:80; display:none; align-items:flex-end; justify-content:center; background:rgba(0,0,0,.45)}
+  .sheet.show{display:flex}
+  .sheet .inner{background:var(--panel); width:100%; max-width:560px; border-radius:20px 20px 0 0; padding:18px 18px calc(24px + env(safe-area-inset-bottom)); max-height:82vh; overflow:auto; box-shadow:var(--shadow)}
+  .sheet h3{margin:2px 0 4px; font-size:1.05rem}
+  .sheet .sub{color:var(--muted); font-size:.85rem; margin-bottom:12px}
+  .sheet .line{padding:12px 0; border-bottom:1px dashed var(--line)}
+  .sheet .line:last-child{border-bottom:0}
+  .sheet .close{width:100%; margin-top:14px; padding:14px; border-radius:12px; border:1px solid var(--line); background:var(--bg); color:var(--ink); font-weight:800; cursor:pointer}
+
+  .foot{margin-top:36px; text-align:center; color:var(--muted); font-size:.8rem}
+
+  @media (max-width:560px){
+    .hero h1{font-size:1.3rem}
+    :root{--en-size:1.55rem}
+    .brandmark span.full{display:none}
+  }
+  @media print{
+    header,.sos,.nav,#presenter{display:none!important}
+    body{background:#fff}
+    .card,.metric,.memcard,details.qa{box-shadow:none; break-inside:avoid}
+    details.qa[open] .abody, details.qa .abody{display:block!important}
+    details.qa .abody{border-top:1px solid #ccc}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap bar">
+    <div class="brandmark"><span class="dot"></span> AIVARI <span class="full">발표 컨닝페이퍼</span></div>
+    <div class="spacer"></div>
+    <div class="seg" role="tablist">
+      <button id="tabStudy" class="on" onclick="setMode('study')">학습</button>
+      <button id="tabPres" onclick="setMode('present')">발표</button>
+    </div>
+    <button class="iconbtn" onclick="toggleTheme()" title="라이트/다크" id="themeBtn">🌙</button>
+  </div>
+</header>
+
+<main class="wrap" id="study">
+
+  <div class="hero">
+    <div class="eyebrow">Core message · 내일의 무기 한 문장</div>
+    <h1>이건 임상의를 대체하는 시스템이 아니라, <br>놓칠 수 있는 reportable finding을 줄이는 <u>의사결정 보조 도구</u>입니다.</h1>
+    <p>A sensitivity-first decision-support tool to reduce missed reportable findings.</p>
+    <div class="meta">
+      <span>📄 AIVARI Agent — ICML 2026 Workshop (GenBio)</span>
+      <span>👤 Min Kang · 3billion</span>
+      <span>🎯 천천히 · 또박또박 · 문장 사이 쉬기</span>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <a href="#s20">⏱ 20초 버전</a>
+    <a href="#deck">🎤 발표 대본</a>
+    <a href="#metrics">📊 숫자</a>
+    <a href="#memo">🧠 반드시 외울 4문장</a>
+    <a href="#qa">💬 예상 Q&amp;A</a>
+    <a href="#sos">🆘 급할 때</a>
+  </nav>
+
+  <!-- 20 sec -->
+  <section class="block" id="s20">
+    <div class="block-h"><div class="ix">⏱</div><h2>아주 짧은 20초 버전</h2><span class="tag">누가 물어보면 이걸로</span></div>
+    <div class="card" id="c20"></div>
+  </section>
+
+  <!-- deck / main script -->
+  <section class="block" id="deck">
+    <div class="block-h"><div class="ix">🎤</div><h2>메인 발표 대본</h2><span class="tag">위→아래 순서대로</span></div>
+    <div id="deckStudy"></div>
+  </section>
+
+  <!-- metrics -->
+  <section class="block" id="metrics">
+    <div class="block-h"><div class="ix">📊</div><h2>결과 숫자 (외우기 쉽게)</h2><span class="tag">300 cases · 6,460 hyp.</span></div>
+    <div class="mgrid" id="mgrid"></div>
+    <div class="note" id="metricNote"></div>
+  </section>
+
+  <!-- memorize -->
+  <section class="block" id="memo">
+    <div class="block-h"><div class="ix">🧠</div><h2>내일 반드시 외울 4문장</h2><span class="tag">이것만은</span></div>
+    <div class="mem" id="mem"></div>
+  </section>
+
+  <!-- Q&A -->
+  <section class="block" id="qa">
+    <div class="block-h"><div class="ix">💬</div><h2>예상 Q&amp;A</h2><span class="tag">질문 오면 검색</span></div>
+    <input class="search" id="qaSearch" placeholder="🔎 키워드 검색 (예: precision, tool, limitation, 자동)" oninput="filterQA()" />
+    <div id="qaList"></div>
+  </section>
+
+  <!-- SOS inline -->
+  <section class="block" id="sos">
+    <div class="block-h"><div class="ix">🆘</div><h2>급할 때 쓰는 문장</h2><span class="tag">우측 하단 버튼으로도</span></div>
+    <div class="card" id="sosInline"></div>
+  </section>
+
+  <div class="foot">천천히 해도 괜찮아요. 이 페이지는 오프라인에서도 열립니다. · Break a leg, Min 🍀</div>
+</main>
+
+<!-- Presenter mode -->
+<div id="presenter">
+  <div class="pbar">
+    <span class="ptitle" id="pTitle">Opening</span>
+    <span class="ppos" id="pPos">1 / 10</span>
+    <div class="spacer" style="flex:1"></div>
+    <div class="fs">
+      <button onclick="fontStep(-1)">A−</button>
+      <button onclick="fontStep(1)">A+</button>
+    </div>
+    <button class="iconbtn" onclick="setMode('study')" title="닫기">✕</button>
+  </div>
+  <div class="pstage"><div class="pcard" id="pCard"></div></div>
+  <div class="dots" id="pDots"></div>
+  <div class="pnav">
+    <button class="move ghost" id="pPrev" onclick="go(-1)">← 이전</button>
+    <button class="move" id="pNext" onclick="go(1)">다음 →</button>
+  </div>
+</div>
+
+<!-- SOS sheet -->
+<button class="sos" onclick="openSheet()">🆘<br>급할때</button>
+<div class="sheet" id="sheet" onclick="if(event.target===this)closeSheet()">
+  <div class="inner">
+    <h3>🆘 급할 때 이 문장</h3>
+    <div class="sub">질문을 못 알아들었거나, 답이 막힐 때 — 당황하지 말고 그대로 읽으세요.</div>
+    <div id="sheetBody"></div>
+    <button class="close" onclick="closeSheet()">닫기</button>
+  </div>
+</div>
+
+<script>
+/* ================= DATA ================= */
+const DECK = [
+  { title:"Opening", icon:"👋", lines:[
+    {en:"Hi, I'm Min from 3billion.", ko:"안녕하세요, 저는 쓰리빌리언의 Min입니다."},
+    {en:"My English is not very fluent, so I will explain this in simple words.", ko:"제가 영어가 유창하지 않아서, 쉬운 말로 설명하겠습니다."},
+    {en:"This poster is about AIVARI Agent.", ko:"이 포스터는 AIVARI Agent에 관한 것입니다."},
+    {en:"AIVARI Agent is an LLM agent for clinical variant interpretation.", ko:"AIVARI Agent는 임상 변이 해석을 위한 LLM agent입니다.", key:true},
+  ], note:"첫 두 문장으로 '영어 못한다'를 먼저 밝히면 청중이 기다려줍니다. 여유 있게." },
+
+  { title:"Problem", icon:"❓", lines:[
+    {en:"The main problem is this.", ko:"핵심 문제는 이것입니다."},
+    {en:"Clinical variant interpretation is not just single-variant classification.", ko:"임상 변이 해석은 단순한 단일 변이 분류 문제가 아닙니다.", key:true},
+    {en:"For one patient, there can be many candidate variants and many possible diseases.", ko:"한 환자에게 여러 후보 변이와 여러 가능한 질환이 있을 수 있습니다."},
+    {en:"So clinicians need to check many gene-disease hypotheses.", ko:"그래서 임상의는 여러 gene-disease hypothesis를 검토해야 합니다."},
+    {en:"For each hypothesis, we need to consider several types of evidence.", ko:"각 hypothesis에 대해 여러 종류의 근거를 함께 고려해야 합니다."},
+    {en:"We need variant evidence, patient symptoms, inheritance, and database evidence like OMIM and ClinVar.", ko:"변이 근거, 환자 증상, 유전 양식, 그리고 OMIM과 ClinVar 같은 데이터베이스 근거가 필요합니다."},
+  ]},
+
+  { title:"Method", icon:"⚙️", lines:[
+    {en:"Our idea is simple.", ko:"저희 아이디어는 간단합니다."},
+    {en:"We let the agent review one candidate gene at a time.", ko:"agent가 후보 유전자를 하나씩 검토하게 합니다.", key:true},
+    {en:"For each candidate gene, the agent performs one single rollout.", ko:"각 후보 유전자에 대해 agent는 한 번의 single rollout을 수행합니다."},
+    {en:"In that rollout, it checks all related gene-disease hypotheses.", ko:"그 rollout 안에서 관련된 모든 gene-disease hypothesis를 확인합니다."},
+    {en:"During this process, the agent can call tools.", ko:"이 과정에서 agent는 tool을 호출할 수 있습니다."},
+    {en:"For example, it can look up OMIM, ClinVar, and detailed variant information.", ko:"예를 들어 OMIM, ClinVar, 변이 상세 정보를 조회할 수 있습니다."},
+    {en:"Then the agent gives a structured output.", ko:"그다음 agent는 구조화된 출력을 냅니다."},
+    {en:"The final result is Positive, Inconclusive, or Negative.", ko:"최종 결과는 Positive, Inconclusive, Negative 중 하나입니다."},
+    {en:"It also gives a reasoning trace for clinician review.", ko:"또한 임상의 검토를 위한 reasoning trace도 제공합니다."},
+  ], note:"핵심 그림: 유전자 하나 = rollout 한 번. 그 안에서 tool로 OMIM·ClinVar를 조회." },
+
+  { title:"Evaluation", icon:"🧪", lines:[
+    {en:"I think our evaluation design is also an important part of this work.", ko:"저희 평가 설계도 이 연구의 중요한 부분이라고 생각합니다."},
+    {en:"We designed the evaluation to match the real clinical workflow.", ko:"실제 임상 workflow에 맞추어 평가를 설계했습니다.", key:true},
+    {en:"In clinical diagnosis, row-level correctness is not enough.", ko:"임상 진단에서는 row-level correctness만으로는 충분하지 않습니다."},
+    {en:"The more important question is: did the system find at least one truly reportable finding for the patient?", ko:"더 중요한 질문은, 시스템이 한 환자에서 실제로 보고해야 할 finding을 최소 하나라도 찾았는가입니다."},
+    {en:"So we evaluate the system at two levels: case level and hypothesis level.", ko:"그래서 case level과 hypothesis level, 두 수준에서 평가했습니다."},
+    {en:"A hypothesis means one gene-disease pair for one patient.", ko:"여기서 hypothesis는 한 환자에 대한 하나의 gene-disease pair를 의미합니다."},
+    {en:"The ground truth comes from clinician-written clinical reports.", ko:"정답 라벨은 임상의가 작성한 clinical report에서 가져왔습니다."},
+  ]},
+
+  { title:"Metric 1 · Group Sensitivity", icon:"📈", lines:[
+    {en:"The first metric is Group Sensitivity.", ko:"첫 번째 metric은 Group Sensitivity입니다."},
+    {en:"It asks: in a reportable patient case, did the system find a true reportable hypothesis?", ko:"reportable한 환자 케이스에서 시스템이 실제 reportable hypothesis를 찾았는지를 봅니다.", key:true},
+    {en:"This is important because we do not want to miss clinically important findings.", ko:"임상적으로 중요한 finding을 놓치면 안 되기 때문에 중요합니다."},
+  ], note:"한 줄 요약: reportable case를 얼마나 잘 잡아내는가." },
+
+  { title:"Metric 2 · Group NPV", icon:"🛡️", lines:[
+    {en:"The second metric is Group NPV.", ko:"두 번째 metric은 Group NPV입니다."},
+    {en:"It asks: when the system says all candidates are negative, can we trust that decision?", ko:"모든 후보를 negative라고 했을 때 그 판단을 신뢰할 수 있는지를 봅니다.", key:true},
+    {en:"So Group NPV measures case-level rule-out reliability.", ko:"그래서 Group NPV는 case-level rule-out 신뢰도를 측정합니다."},
+  ], note:"한 줄 요약: 전부 negative라고 했을 때 정말 안심해도 되는가." },
+
+  { title:"Metric 3 · Row Precision", icon:"🎯", lines:[
+    {en:"The third metric is Row Precision.", ko:"세 번째 metric은 Row Precision입니다."},
+    {en:"It asks: among the hypotheses predicted as reportable, how many are truly reportable?", ko:"reportable하다고 예측한 hypothesis 중 실제 reportable한 것이 얼마나 되는지를 봅니다.", key:true},
+    {en:"This is related to the review burden for clinicians.", ko:"이는 임상의가 검토해야 하는 부담과 관련이 있습니다."},
+  ], note:"한 줄 요약: 올려준 후보 중 진짜 reportable이 얼마나 되는가." },
+
+  { title:"Why this evaluation", icon:"🧭", lines:[
+    {en:"Together, these metrics measure three things.", ko:"이 세 metric은 세 가지를 함께 측정합니다."},
+    {en:"Can we catch reportable cases?", ko:"reportable case를 잡아낼 수 있는가?"},
+    {en:"Can we safely rule out negative cases?", ko:"negative case를 안전하게 배제할 수 있는가?"},
+    {en:"And how much review burden do we create for clinicians?", ko:"그리고 임상의에게 얼마나 많은 검토 부담을 만드는가?"},
+    {en:"That is why we report Group Sensitivity, Group NPV, and Row Precision together.", ko:"그래서 이 세 가지를 함께 보고했습니다.", key:true},
+  ]},
+
+  { title:"Results", icon:"🏆", lines:[
+    {en:"We tested AIVARI Agent on 300 real clinical cases.", ko:"300개의 실제 임상 케이스에서 테스트했습니다."},
+    {en:"There were 6,460 candidate hypotheses.", ko:"총 6,460개의 후보 hypothesis가 있었습니다."},
+    {en:"AIVARI Agent achieved 0.905 Group Sensitivity and 0.933 Group NPV.", ko:"Group Sensitivity 0.905, Group NPV 0.933을 달성했습니다.", key:true},
+    {en:"Row Precision was 0.351.", ko:"Row Precision은 0.351이었습니다."},
+    {en:"Compared with our previous hybrid pipeline, AIVARI Agent improved case-level detection.", ko:"기존 hybrid pipeline과 비교했을 때 case-level detection을 개선했습니다."},
+    {en:"The largest improvement was on Inconclusive cases.", ko:"가장 큰 개선은 Inconclusive case에서 나타났습니다.", key:true},
+    {en:"These are borderline cases with partial evidence, so they are easy to miss.", ko:"이런 케이스는 부분적 근거만 있는 경계선 케이스라 놓치기 쉽습니다."},
+  ], note:"숫자가 헷갈리면: 0.905 / 0.933 / 0.351. 순서대로 Sensitivity, NPV, Precision." },
+
+  { title:"Takeaway", icon:"✅", lines:[
+    {en:"So the main message is simple.", ko:"그래서 핵심 메시지는 간단합니다."},
+    {en:"AIVARI Agent is a sensitivity-first decision-support tool.", ko:"AIVARI Agent는 sensitivity-first 의사결정 보조 도구입니다.", key:true},
+    {en:"It is not designed to replace clinicians.", ko:"임상의를 대체하기 위한 시스템이 아닙니다."},
+    {en:"It helps clinicians find reportable or potentially reportable hypotheses.", ko:"임상의가 reportable하거나 잠재적으로 reportable한 hypothesis를 찾도록 돕습니다."},
+    {en:"Especially, it helps reduce missed reportable findings.", ko:"특히 놓칠 수 있는 reportable finding을 줄이는 데 도움을 줍니다."},
+    {en:"Thank you. I'm happy to discuss any questions.", ko:"감사합니다. 질문 주시면 답변드리겠습니다.", key:true},
+  ]},
+];
+
+const SHORT = [
+  {en:"This poster is about AIVARI Agent, an LLM agent for clinical variant interpretation.", ko:"이 포스터는 임상 변이 해석을 위한 LLM agent, AIVARI Agent에 관한 것입니다."},
+  {en:"In real clinical cases, we need to check many gene-disease pairs for one patient.", ko:"실제 임상 케이스에서는 한 환자에 대해 여러 gene-disease pair를 확인해야 합니다."},
+  {en:"For each pair, we check the variant, the patient symptoms, inheritance, and database evidence.", ko:"각 pair에 대해 변이, 환자 증상, 유전 양식, 데이터베이스 근거를 확인합니다."},
+  {en:"AIVARI Agent does this with tool use and gives a Positive, Inconclusive, or Negative result.", ko:"AIVARI Agent는 tool use로 이를 수행하고 Positive / Inconclusive / Negative 결과를 냅니다."},
+  {en:"The main goal is to help clinicians avoid missing important reportable findings.", ko:"핵심 목표는 임상의가 중요한 reportable finding을 놓치지 않도록 돕는 것입니다.", key:true},
+];
+
+const METRICS = [
+  {cls:"sens", v:"0.905", n:"Group Sensitivity", d:"reportable case를 잡아내는 능력"},
+  {cls:"npv",  v:"0.933", n:"Group NPV", d:"전부 negative일 때 신뢰도"},
+  {cls:"prec", v:"0.351", n:"Row Precision", d:"올린 후보 중 진짜 비율 (검토 부담)"},
+];
+const METRIC_NOTE = "<b>맥락 숫자:</b> 300 cases · 6,460 hypotheses · base model = Gemini 3 Flash. Head-to-head 235-case 공통 subset에서 기존 hybrid pipeline 대비 <b>+34pp Sensitivity, +40pp NPV</b>. Tool 덕분에 silent miss가 <b>8/200 → 5/200</b>으로 감소.";
+
+const MEMO = [
+  {lab:"핵심 (Core)", en:"At a high level, this is a decision-support tool to reduce missed reportable findings.", ko:"큰 틀에서, 이건 놓칠 수 있는 reportable finding을 줄이기 위한 의사결정 보조 도구입니다."},
+  {lab:"평가 (Evaluation)", en:"We designed the evaluation around clinical workflow: catching reportable cases, safely ruling out negative cases, and measuring clinician review burden.", ko:"임상 workflow에 맞춰 평가를 설계했습니다 — reportable case 잡기, negative 안전하게 배제, 검토 부담 측정."},
+  {lab:"방법 (Method)", en:"AIVARI Agent reviews one candidate gene at a time and checks all related gene-disease hypotheses in one pass.", ko:"AIVARI Agent는 후보 유전자를 하나씩 검토하고, 관련된 모든 gene-disease hypothesis를 한 번의 pass에서 확인합니다."},
+  {lab:"결과 (Result)", en:"The largest benefit was improving case-level detection, especially for Inconclusive cases.", ko:"가장 큰 이점은 특히 Inconclusive case에서 case-level detection을 개선한 것입니다."},
+];
+
+const QA = [
+  { q:"Why single rollout? (왜 single rollout?)", tags:"rollout single pass cost 비용", a:[
+    {en:"Because clinical cases can have many candidate genes.", ko:"임상 케이스에는 많은 후보 유전자가 있을 수 있기 때문입니다."},
+    {en:"If we use many steps for every gene, the cost becomes too high.", ko:"모든 유전자마다 여러 단계를 쓰면 비용이 너무 커집니다."},
+    {en:"So we use one pass for each candidate gene. This is simpler and cheaper.", ko:"그래서 후보 유전자당 한 번의 pass를 씁니다. 더 단순하고 저렴합니다."},
+  ]},
+  { q:"Why use tools? (왜 tool을 쓰나요?)", tags:"tool omim clinvar evidence silent miss 근거", a:[
+    {en:"The tools give the agent more reliable evidence.", ko:"Tool은 agent에게 더 신뢰할 수 있는 근거를 제공합니다."},
+    {en:"For example, the agent can check OMIM, ClinVar, and variant details.", ko:"예를 들어 OMIM, ClinVar, 변이 상세 정보를 확인할 수 있습니다."},
+    {en:"In our result, tools mainly helped reduce silent misses.", ko:"저희 결과에서 tool은 주로 silent miss를 줄이는 데 도움이 되었습니다."},
+  ]},
+  { q:"Why is Row Precision lower? (왜 Row Precision이 낮나요?)", tags:"precision low sensitivity first burden 부담 낮은", a:[
+    {en:"Because our system is sensitivity-first. It tries not to miss important findings.", ko:"저희 시스템이 sensitivity-first이기 때문입니다. 중요한 finding을 놓치지 않으려 합니다."},
+    {en:"So it may show more candidates to clinicians, which can lower row-level precision.", ko:"그래서 임상의에게 더 많은 후보를 보여줄 수 있고, 이로 인해 row precision은 낮아질 수 있습니다."},
+    {en:"But it can improve case-level detection, which matters more clinically.", ko:"하지만 임상적으로 더 중요한 case-level detection은 개선할 수 있습니다.", key:true},
+  ]},
+  { q:"Is this an automatic diagnosis system? (자동 진단 시스템인가요?)", tags:"automatic diagnosis replace 자동 진단 대체", a:[
+    {en:"No. This is not an automatic diagnosis system. It is a decision-support tool.", ko:"아닙니다. 자동 진단 시스템이 아니라 의사결정 보조 도구입니다.", key:true},
+    {en:"A clinician must review the final result.", ko:"최종 결과는 반드시 임상의가 검토해야 합니다."},
+  ]},
+  { q:"What are the limitations? (한계는 무엇인가요?)", tags:"limitation single institution snv indel cnv structural 한계", a:[
+    {en:"First, the data came from a single institution.", ko:"첫째, 데이터는 단일 기관에서 왔습니다."},
+    {en:"Second, we focused only on SNVs and small indels.", ko:"둘째, SNV와 small indel에만 집중했습니다."},
+    {en:"So structural variants, CNVs, and repeat expansions are future work.", ko:"따라서 structural variant, CNV, repeat expansion은 향후 과제입니다."},
+    {en:"Third, we need more evaluation on multi-institution cohorts.", ko:"셋째, 다기관 cohort에서의 추가 평가가 필요합니다."},
+  ]},
+];
+
+const SOS = [
+  {en:"Sorry, could you say that again slowly?", ko:"죄송하지만 천천히 다시 말씀해 주실 수 있을까요?"},
+  {en:"Sorry, I didn't fully catch the question.", ko:"죄송하지만 질문을 완전히 이해하지 못했습니다."},
+  {en:"Are you asking about the model, the data, or the results?", ko:"모델, 데이터, 결과 중 무엇에 대한 질문인가요?"},
+  {en:"That is a good question.", ko:"좋은 질문입니다."},
+  {en:"I need to check the exact detail, but my short answer is this.", ko:"정확한 세부사항은 확인이 필요하지만, 짧게 답하면 이렇습니다."},
+  {en:"At a high level, our system is designed to support clinician review.", ko:"큰 틀에서 저희 시스템은 임상의의 검토를 돕기 위해 설계되었습니다.", key:true},
+];
+
+/* ================= RENDER ================= */
+const $ = s => document.querySelector(s);
+const el = (t,c,h)=>{const e=document.createElement(t); if(c)e.className=c; if(h!=null)e.innerHTML=h; return e;};
+function lineHTML(l, cls){ return `<div class="line ${l.key?'key':''} ${cls||''}"><div class="en">${l.en}</div><div class="ko">${l.ko}</div></div>`; }
+
+// 20s
+$("#c20").innerHTML = SHORT.map(l=>lineHTML(l)).join("");
+
+// deck (study)
+$("#deckStudy").innerHTML = DECK.map((d,i)=>`
+  <div class="block-h" style="margin-top:${i?22:0}px">
+    <div class="ix">${d.icon}</div><h2>${i+1}. ${d.title}</h2>
+  </div>
+  <div class="card">${d.lines.map(l=>lineHTML(l)).join("")}</div>
+  ${d.note?`<div class="note"><b>💡 팁 · </b>${d.note}</div>`:""}
+`).join("");
+
+// metrics
+$("#mgrid").innerHTML = METRICS.map(m=>`<div class="metric ${m.cls}"><div class="v">${m.v}</div><div class="n">${m.n}</div><div class="d">${m.d}</div></div>`).join("");
+$("#metricNote").innerHTML = METRIC_NOTE;
+
+// memorize
+$("#mem").innerHTML = MEMO.map(m=>`<div class="memcard"><div class="lab">${m.lab}</div><div class="en">${m.en}</div><div class="ko">${m.ko}</div></div>`).join("");
+
+// Q&A
+function renderQA(){
+  $("#qaList").innerHTML = QA.map((x,i)=>{
+    const [en,ko] = x.q.split(" (");
+    return `<details class="qa" data-i="${i}"><summary><span class="q">${en}<span class="qko">(${ko||''}</span></span><span class="chev">›</span></summary>
+      <div class="abody">${x.a.map(a=>lineHTML(a)).join("")}</div></details>`;
+  }).join("");
+}
+renderQA();
+function filterQA(){
+  const q = $("#qaSearch").value.trim().toLowerCase();
+  document.querySelectorAll("#qaList details").forEach((d,i)=>{
+    const item = QA[+d.dataset.i];
+    const hay = (item.q+" "+item.tags+" "+item.a.map(a=>a.en+a.ko).join(" ")).toLowerCase();
+    const hit = !q || hay.includes(q);
+    d.style.display = hit?"":"none";
+    d.open = q && hit;
+  });
+}
+
+// SOS
+$("#sosInline").innerHTML = SOS.map(l=>lineHTML(l)).join("");
+$("#sheetBody").innerHTML = SOS.map(l=>lineHTML(l)).join("");
+
+/* ================= PRESENTER ================= */
+let cur=0;
+function renderP(){
+  const d=DECK[cur];
+  $("#pTitle").textContent = `${cur+1}. ${d.title}`;
+  $("#pPos").textContent = `${cur+1} / ${DECK.length}`;
+  $("#pCard").innerHTML = `<span class="pchip">${d.icon} ${d.title}</span>` +
+    d.lines.map(l=>`<div class="pline ${l.key?'key':''}"><div class="en">${l.en}</div><div class="ko">${l.ko}</div></div>`).join("") +
+    (d.note?`<div class="pnote">💡 ${d.note}</div>`:"");
+  $("#pDots").innerHTML = DECK.map((_,i)=>`<i class="${i===cur?'on':''}" onclick="jump(${i})"></i>`).join("");
+  $("#pPrev").disabled = cur===0;
+  $("#pNext").textContent = cur===DECK.length-1 ? "처음으로 ⟳" : "다음 →";
+  $(".pstage").scrollTop=0;
+}
+function go(d){ if(d>0 && cur===DECK.length-1){cur=0;} else {cur=Math.min(DECK.length-1,Math.max(0,cur+d));} renderP(); }
+function jump(i){ cur=i; renderP(); }
+
+/* ================= MODE / THEME / FONT ================= */
+function setMode(m){
+  const pres = m==="present";
+  $("#presenter").classList.toggle("show", pres);
+  $("#tabPres").classList.toggle("on", pres);
+  $("#tabStudy").classList.toggle("on", !pres);
+  document.body.style.overflow = pres ? "hidden" : "";
+  if(pres) renderP();
+  try{ localStorage.setItem("aivari-mode", m); }catch(e){}
+}
+function toggleTheme(){
+  const dark = document.documentElement.getAttribute("data-theme")!=="dark";
+  document.documentElement.setAttribute("data-theme", dark?"dark":"light");
+  $("#themeBtn").textContent = dark?"☀️":"🌙";
+  try{ localStorage.setItem("aivari-theme", dark?"dark":"light"); }catch(e){}
+}
+let fs=1.9;
+function fontStep(d){ fs=Math.min(3.2,Math.max(1.2,fs+d*0.2)); document.documentElement.style.setProperty("--en-size", fs+"rem"); try{localStorage.setItem("aivari-fs",fs);}catch(e){} }
+
+function openSheet(){ $("#sheet").classList.add("show"); }
+function closeSheet(){ $("#sheet").classList.remove("show"); }
+
+// keyboard (presenter)
+document.addEventListener("keydown", e=>{
+  if(!$("#presenter").classList.contains("show")) return;
+  if(e.key==="ArrowRight"||e.key===" "||e.key==="PageDown"){e.preventDefault();go(1);}
+  if(e.key==="ArrowLeft"||e.key==="PageUp"){e.preventDefault();go(-1);}
+  if(e.key==="Escape"){setMode("study");}
+});
+
+// restore prefs
+(function(){
+  try{
+    const t=localStorage.getItem("aivari-theme"); if(t==="dark"){document.documentElement.setAttribute("data-theme","dark");$("#themeBtn").textContent="☀️";}
+    const f=parseFloat(localStorage.getItem("aivari-fs")); if(f){fs=f;document.documentElement.style.setProperty("--en-size",fs+"rem");}
+  }catch(e){}
+})();
+</script>
+</body>
+</html>
