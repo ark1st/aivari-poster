@@ -45,6 +45,12 @@
   .seg button.on{background:var(--brand); color:#fff}
   .iconbtn{border:1px solid var(--line); background:var(--panel); color:var(--ink); width:38px;height:38px;border-radius:10px;cursor:pointer;font-size:1.05rem;box-shadow:var(--shadow)}
 
+  /* version switch */
+  .vswitch{display:inline-flex; flex-wrap:wrap; gap:6px; background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:5px; box-shadow:var(--shadow)}
+  .vswitch button{border:0; background:transparent; color:var(--muted); font-weight:750; font-size:.86rem; padding:8px 14px; border-radius:9px; cursor:pointer; white-space:nowrap}
+  .vswitch button.on{background:var(--brand); color:#fff}
+  .vswitch button .vsub{display:block; font-size:.68rem; font-weight:600; opacity:.8; margin-top:1px}
+
   /* ---------- Study mode ---------- */
   main{padding:22px 0 120px}
   .hero{
@@ -67,11 +73,16 @@
   .block-h h2{margin:0; font-size:1.18rem; letter-spacing:-.01em}
   .block-h .tag{margin-left:auto; font-size:.72rem; font-weight:700; color:var(--muted); background:var(--panel); border:1px solid var(--line); padding:3px 9px; border-radius:999px}
 
+  .verbar{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin:0 0 14px; padding:14px; background:var(--panel); border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow)}
+  .verbar .lbl{font-weight:800; font-size:.9rem}
+  .verbar .desc{color:var(--muted); font-size:.82rem; flex-basis:100%}
+
   .card{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden}
   .line{padding:14px 18px; border-bottom:1px solid var(--line)}
   .line:last-child{border-bottom:0}
   .line .en{font-size:1.06rem; font-weight:650; letter-spacing:-.01em}
   .line .ko{margin-top:3px; color:var(--muted); font-size:.92rem}
+  .line .ko:empty{display:none}
   .line.key{background:linear-gradient(90deg,var(--brand-soft),transparent)}
   .line.key .en:before{content:"★ "; color:var(--brand)}
 
@@ -111,9 +122,10 @@
   /* ---------- Presenter mode ---------- */
   #presenter{display:none; position:fixed; inset:0; z-index:60; background:var(--bg); flex-direction:column}
   #presenter.show{display:flex}
-  .pbar{display:flex; align-items:center; gap:8px; padding:12px 16px; border-bottom:1px solid var(--line); background:var(--panel)}
+  .pbar{display:flex; align-items:center; gap:8px; padding:10px 14px; border-bottom:1px solid var(--line); background:var(--panel); flex-wrap:wrap}
   .pbar .ptitle{font-weight:800; font-size:.95rem; color:var(--brand)}
   .pbar .ppos{color:var(--muted); font-size:.85rem; font-weight:700}
+  .pbar .vswitch button{padding:6px 10px; font-size:.78rem}
   .fs{display:inline-flex; gap:4px}
   .fs button{width:34px;height:34px;border-radius:9px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-weight:800;cursor:pointer}
   .pstage{flex:1; overflow:auto; display:flex; align-items:center; justify-content:center; padding:30px 20px}
@@ -123,6 +135,7 @@
   .pline:last-child{border-bottom:0}
   .pline .en{font-size:var(--en-size); font-weight:700; letter-spacing:-.02em; line-height:1.32}
   .pline .ko{margin-top:8px; color:var(--muted); font-size:calc(var(--en-size) * .55)}
+  .pline .ko:empty{display:none}
   .pline.key .en{color:var(--brand)}
   .pnote{margin-top:18px; font-size:.95rem; color:var(--muted); background:var(--amber-soft); border-radius:12px; padding:12px 15px; border:1px solid color-mix(in srgb,var(--amber) 30%, var(--line))}
   .pnav{display:flex; align-items:center; gap:12px; padding:14px 16px calc(14px + env(safe-area-inset-bottom)); border-top:1px solid var(--line); background:var(--panel)}
@@ -148,11 +161,11 @@
 
   @media (max-width:560px){
     .hero h1{font-size:1.3rem}
-    :root{--en-size:1.55rem}
+    :root{--en-size:1.5rem}
     .brandmark span.full{display:none}
   }
   @media print{
-    header,.sos,.nav,#presenter{display:none!important}
+    header,.sos,.nav,#presenter,.verbar{display:none!important}
     body{background:#fff}
     .card,.metric,.memcard,details.qa{box-shadow:none; break-inside:avoid}
     details.qa[open] .abody, details.qa .abody{display:block!important}
@@ -182,7 +195,7 @@
     <div class="meta">
       <span>📄 AIVARI Agent — ICML 2026 Workshop (GenBio)</span>
       <span>👤 Min Kang · 3billion</span>
-      <span>🎯 천천히 · 또박또박 · 문장 사이 쉬기</span>
+      <span>🎯 쉬운 → 정식 → 한국어, 3가지 버전</span>
     </div>
   </div>
 
@@ -197,13 +210,18 @@
 
   <!-- 20 sec -->
   <section class="block" id="s20">
-    <div class="block-h"><div class="ix">⏱</div><h2>아주 짧은 20초 버전</h2><span class="tag">누가 물어보면 이걸로</span></div>
+    <div class="block-h"><div class="ix">⏱</div><h2>아주 짧은 20초 버전</h2><span class="tag">지나가다 물으면 이걸로</span></div>
     <div class="card" id="c20"></div>
   </section>
 
   <!-- deck / main script -->
   <section class="block" id="deck">
-    <div class="block-h"><div class="ix">🎤</div><h2>메인 발표 대본</h2><span class="tag">위→아래 순서대로</span></div>
+    <div class="block-h"><div class="ix">🎤</div><h2>발표 대본</h2><span class="tag">위→아래 순서대로</span></div>
+    <div class="verbar">
+      <span class="lbl">버전 선택</span>
+      <div class="vswitch" id="verStudy"></div>
+      <div class="desc" id="verDesc"></div>
+    </div>
     <div id="deckStudy"></div>
   </section>
 
@@ -233,7 +251,7 @@
     <div class="card" id="sosInline"></div>
   </section>
 
-  <div class="foot">천천히 해도 괜찮아요. 이 페이지는 오프라인에서도 열립니다. · Break a leg, Min 🍀</div>
+  <div class="foot">천천히 해도 괜찮아요. 이 페이지는 오프라인에서도 열립니다. · Break a leg, Min Kang 🍀</div>
 </main>
 
 <!-- Presenter mode -->
@@ -241,7 +259,8 @@
   <div class="pbar">
     <span class="ptitle" id="pTitle">Opening</span>
     <span class="ppos" id="pPos">1 / 10</span>
-    <div class="spacer" style="flex:1"></div>
+    <div class="spacer" style="flex:1; min-width:8px"></div>
+    <div class="vswitch" id="verPres"></div>
     <div class="fs">
       <button onclick="fontStep(-1)">A−</button>
       <button onclick="fontStep(1)">A+</button>
@@ -268,10 +287,54 @@
 </div>
 
 <script>
-/* ================= DATA ================= */
-const DECK = [
+/* ================= VERSIONS =================
+   각 line = {en:주 문장(크게), ko:보조(작게), key:핵심여부}
+   - easy / full: en=영어, ko=한국어
+   - ko(한국어 대본): en=한국어(크게), ko=영어 키워드(작게)
+*/
+
+/* ---------- 쉬운 버전 (짧고 쉬운 영어) ---------- */
+const DECK_EASY = [
   { title:"Opening", icon:"👋", lines:[
-    {en:"Hi, I'm Min from 3billion.", ko:"안녕하세요, 저는 쓰리빌리언의 Min입니다."},
+    {en:"Hi, I'm Min Kang from 3billion.", ko:"안녕하세요, 쓰리빌리언의 Min Kang입니다."},
+    {en:"My English is not perfect, so I will use simple words.", ko:"영어가 완벽하지 않아서 쉬운 단어로 말하겠습니다."},
+    {en:"This is AIVARI Agent, an AI agent for reading genetic variants.", ko:"이것은 AIVARI Agent, 유전 변이를 해석하는 AI agent입니다.", key:true},
+  ], note:"'영어 못한다'를 먼저 말하면 청중이 기다려줍니다. 천천히." },
+
+  { title:"Problem", icon:"❓", lines:[
+    {en:"One patient can have many variants and many possible diseases.", ko:"한 환자에게 여러 변이와 여러 질환 가능성이 있습니다."},
+    {en:"So a doctor must check many gene-disease pairs.", ko:"그래서 의사는 많은 gene-disease pair를 확인해야 합니다.", key:true},
+    {en:"This is a lot of work, and it is easy to miss something.", ko:"일이 많고, 무언가를 놓치기 쉽습니다."},
+  ]},
+
+  { title:"Method", icon:"⚙️", lines:[
+    {en:"AIVARI Agent checks one gene at a time.", ko:"AIVARI Agent는 유전자를 하나씩 확인합니다.", key:true},
+    {en:"It can use tools like OMIM and ClinVar to find evidence.", ko:"OMIM, ClinVar 같은 tool로 근거를 찾을 수 있습니다."},
+    {en:"Then it says: Positive, Inconclusive, or Negative.", ko:"그리고 Positive, Inconclusive, Negative로 답합니다."},
+  ], note:"핵심 그림: 유전자 하나 = 확인 한 번. tool로 근거 조회." },
+
+  { title:"Evaluation", icon:"🧪", lines:[
+    {en:"We did not just count correct rows.", ko:"단순히 맞은 행 수만 센 게 아닙니다."},
+    {en:"We asked: for each patient, did we find the important finding?", ko:"각 환자마다 중요한 finding을 찾았는지를 봤습니다.", key:true},
+  ]},
+
+  { title:"Results", icon:"🏆", lines:[
+    {en:"We tested 300 real clinical cases.", ko:"300개의 실제 임상 케이스로 테스트했습니다."},
+    {en:"We catch about 90% of reportable cases.", ko:"reportable case의 약 90%를 잡아냅니다.", key:true},
+    {en:"The biggest improvement was for hard, borderline cases.", ko:"가장 큰 개선은 어렵고 경계에 있는 케이스에서 나왔습니다."},
+  ], note:"숫자 하나만: 0.905 (약 90%)." },
+
+  { title:"Takeaway", icon:"✅", lines:[
+    {en:"This is not a robot doctor. It is a helper.", ko:"이것은 로봇 의사가 아니라 도우미입니다.", key:true},
+    {en:"It helps doctors not miss important findings.", ko:"의사가 중요한 finding을 놓치지 않도록 돕습니다."},
+    {en:"Thank you. Please ask me anything.", ko:"감사합니다. 무엇이든 물어보세요."},
+  ]},
+];
+
+/* ---------- 정식 버전 (풀 대본) ---------- */
+const DECK_FULL = [
+  { title:"Opening", icon:"👋", lines:[
+    {en:"Hi, I'm Min Kang from 3billion.", ko:"안녕하세요, 저는 쓰리빌리언의 Min Kang입니다."},
     {en:"My English is not very fluent, so I will explain this in simple words.", ko:"제가 영어가 유창하지 않아서, 쉬운 말로 설명하겠습니다."},
     {en:"This poster is about AIVARI Agent.", ko:"이 포스터는 AIVARI Agent에 관한 것입니다."},
     {en:"AIVARI Agent is an LLM agent for clinical variant interpretation.", ko:"AIVARI Agent는 임상 변이 해석을 위한 LLM agent입니다.", key:true},
@@ -354,6 +417,58 @@ const DECK = [
   ]},
 ];
 
+/* ---------- 한국어 대본 (크게=한국어, 작게=영어 키워드) ---------- */
+const DECK_KO = [
+  { title:"오프닝", icon:"👋", lines:[
+    {en:"안녕하세요, 쓰리빌리언에서 온 Min Kang입니다.", ko:"Hi, I'm Min Kang from 3billion."},
+    {en:"이 포스터는 AIVARI Agent를 소개합니다. 임상 변이 해석을 위한 LLM 에이전트입니다.", ko:"AIVARI Agent — an LLM agent for clinical variant interpretation.", key:true},
+  ], note:"한국어로 발표하거나, 한국인 참석자가 물어볼 때 그대로 쓰세요." },
+
+  { title:"문제", icon:"❓", lines:[
+    {en:"임상 변이 해석은 단순히 변이 하나를 분류하는 문제가 아닙니다.", ko:"not just single-variant classification", key:true},
+    {en:"한 환자에게 여러 후보 변이와 여러 가능한 질환이 있고, 그래서 여러 gene-disease 가설을 검토해야 합니다.", ko:"many candidate variants → many gene-disease hypotheses"},
+    {en:"각 가설마다 변이 근거, 환자 증상, 유전 양식, 그리고 OMIM·ClinVar 같은 데이터베이스 근거를 함께 봐야 합니다.", ko:"variant, phenotype, inheritance, OMIM/ClinVar"},
+  ]},
+
+  { title:"방법", icon:"⚙️", lines:[
+    {en:"저희 접근은 간단합니다. 에이전트가 후보 유전자를 하나씩 검토합니다.", ko:"one candidate gene at a time", key:true},
+    {en:"유전자 하나당 한 번의 rollout을 수행하고, 그 안에서 관련된 모든 gene-disease 가설을 확인합니다.", ko:"single rollout · all (g,d) hypotheses"},
+    {en:"필요하면 OMIM, ClinVar, 변이 상세 정보를 tool로 조회합니다.", ko:"on-demand tool calls"},
+    {en:"최종적으로 Positive, Inconclusive, Negative 중 하나와 근거(reasoning trace)를 냅니다.", ko:"structured output + reasoning trace"},
+  ], note:"핵심 그림: 유전자 하나 = rollout 한 번. 그 안에서 tool로 근거 조회." },
+
+  { title:"평가", icon:"🧪", lines:[
+    {en:"평가 설계도 이 연구의 중요한 부분입니다.", ko:"evaluation design matters"},
+    {en:"임상에서는 행 단위 정확도만으로 부족합니다. 더 중요한 질문은 '이 환자에서 보고할 finding을 하나라도 찾았는가'입니다.", ko:"row-level is not enough → per-patient detection", key:true},
+    {en:"그래서 case 단위와 hypothesis 단위, 두 수준에서 평가했고, 정답은 임상의가 작성한 clinical report에서 가져왔습니다.", ko:"case-level & hypothesis-level · ground truth = signed reports"},
+  ]},
+
+  { title:"지표", icon:"📊", lines:[
+    {en:"Group Sensitivity는 reportable case를 얼마나 잘 잡아내는지를 봅니다.", ko:"catch reportable cases"},
+    {en:"Group NPV는 전부 negative라고 했을 때 그 판단을 믿어도 되는지를 봅니다.", ko:"rule-out reliability"},
+    {en:"Row Precision은 올린 후보 중 실제 reportable 비율, 즉 검토 부담을 봅니다.", ko:"clinician review burden"},
+  ], note:"세 지표 = 잡기 / 배제 신뢰 / 검토 부담." },
+
+  { title:"결과", icon:"🏆", lines:[
+    {en:"300개 실제 케이스, 6,460개 후보 가설로 평가했습니다.", ko:"300 cases · 6,460 hypotheses"},
+    {en:"Group Sensitivity 0.905, Group NPV 0.933, Row Precision 0.351을 기록했습니다.", ko:"0.905 / 0.933 / 0.351", key:true},
+    {en:"기존 hybrid pipeline보다 case 단위 검출이 개선됐고, 특히 Inconclusive 케이스에서 가장 큰 향상이 있었습니다.", ko:"biggest gain on Inconclusive cases"},
+  ], note:"숫자 순서: Sensitivity, NPV, Precision = 0.905 / 0.933 / 0.351." },
+
+  { title:"핵심 메시지", icon:"✅", lines:[
+    {en:"핵심은, 이것은 임상의를 대체하는 자동 진단 시스템이 아니라는 것입니다.", ko:"not an autonomous diagnostic system", key:true},
+    {en:"sensitivity 우선의 의사결정 보조 도구로, 놓칠 수 있는 reportable finding을 줄이는 것이 목표입니다.", ko:"sensitivity-first decision-support tool"},
+    {en:"감사합니다. 질문 환영합니다.", ko:"Thank you. Happy to take questions."},
+  ]},
+];
+
+const VERSIONS = {
+  easy: { label:"쉬운", sub:"짧고 쉬운 영어", deck:DECK_EASY, desc:"문장이 짧고 단어가 쉬워요. 처음 연습과 실전 기본값으로 추천." },
+  full: { label:"정식", sub:"논문 풀 대본", deck:DECK_FULL, desc:"모든 섹션·지표를 자세히. 질문이 깊게 들어올 때, 시간이 넉넉할 때." },
+  ko:   { label:"한국어", sub:"한국어 대본", deck:DECK_KO, desc:"크게=한국어, 작게=영어 키워드. 한국어 발표나 한국인 참석자 대응용." },
+};
+const VER_ORDER = ["easy","full","ko"]; // 쉬운 버전 먼저
+
 const SHORT = [
   {en:"This poster is about AIVARI Agent, an LLM agent for clinical variant interpretation.", ko:"이 포스터는 임상 변이 해석을 위한 LLM agent, AIVARI Agent에 관한 것입니다."},
   {en:"In real clinical cases, we need to check many gene-disease pairs for one patient.", ko:"실제 임상 케이스에서는 한 환자에 대해 여러 gene-disease pair를 확인해야 합니다."},
@@ -415,27 +530,44 @@ const SOS = [
 
 /* ================= RENDER ================= */
 const $ = s => document.querySelector(s);
-const el = (t,c,h)=>{const e=document.createElement(t); if(c)e.className=c; if(h!=null)e.innerHTML=h; return e;};
-function lineHTML(l, cls){ return `<div class="line ${l.key?'key':''} ${cls||''}"><div class="en">${l.en}</div><div class="ko">${l.ko}</div></div>`; }
+function lineHTML(l, cls){ return `<div class="line ${l.key?'key':''} ${cls||''}"><div class="en">${l.en}</div><div class="ko">${l.ko||''}</div></div>`; }
 
-// 20s
-$("#c20").innerHTML = SHORT.map(l=>lineHTML(l)).join("");
+let curVer = "easy";
+function activeDeck(){ return VERSIONS[curVer].deck; }
+
+// version switch buttons (study + presenter)
+function renderVerSwitch(){
+  const html = VER_ORDER.map(k=>`<button class="${k===curVer?'on':''}" onclick="setVersion('${k}')">${VERSIONS[k].label}<span class="vsub">${VERSIONS[k].sub}</span></button>`).join("");
+  $("#verStudy").innerHTML = html;
+  $("#verPres").innerHTML = VER_ORDER.map(k=>`<button class="${k===curVer?'on':''}" onclick="setVersion('${k}')">${VERSIONS[k].label}</button>`).join("");
+  $("#verDesc").textContent = VERSIONS[curVer].desc;
+}
 
 // deck (study)
-$("#deckStudy").innerHTML = DECK.map((d,i)=>`
-  <div class="block-h" style="margin-top:${i?22:0}px">
-    <div class="ix">${d.icon}</div><h2>${i+1}. ${d.title}</h2>
-  </div>
-  <div class="card">${d.lines.map(l=>lineHTML(l)).join("")}</div>
-  ${d.note?`<div class="note"><b>💡 팁 · </b>${d.note}</div>`:""}
-`).join("");
+function renderStudyDeck(){
+  $("#deckStudy").innerHTML = activeDeck().map((d,i)=>`
+    <div class="block-h" style="margin-top:${i?22:0}px">
+      <div class="ix">${d.icon}</div><h2>${i+1}. ${d.title}</h2>
+    </div>
+    <div class="card">${d.lines.map(l=>lineHTML(l)).join("")}</div>
+    ${d.note?`<div class="note"><b>💡 팁 · </b>${d.note}</div>`:""}
+  `).join("");
+}
 
-// metrics
+function setVersion(k){
+  curVer=k; cur=0;
+  renderVerSwitch(); renderStudyDeck();
+  if($("#presenter").classList.contains("show")) renderP();
+  try{ localStorage.setItem("aivari-ver", k); }catch(e){}
+}
+
+// static sections
+$("#c20").innerHTML = SHORT.map(l=>lineHTML(l)).join("");
 $("#mgrid").innerHTML = METRICS.map(m=>`<div class="metric ${m.cls}"><div class="v">${m.v}</div><div class="n">${m.n}</div><div class="d">${m.d}</div></div>`).join("");
 $("#metricNote").innerHTML = METRIC_NOTE;
-
-// memorize
 $("#mem").innerHTML = MEMO.map(m=>`<div class="memcard"><div class="lab">${m.lab}</div><div class="en">${m.en}</div><div class="ko">${m.ko}</div></div>`).join("");
+$("#sosInline").innerHTML = SOS.map(l=>lineHTML(l)).join("");
+$("#sheetBody").innerHTML = SOS.map(l=>lineHTML(l)).join("");
 
 // Q&A
 function renderQA(){
@@ -448,7 +580,7 @@ function renderQA(){
 renderQA();
 function filterQA(){
   const q = $("#qaSearch").value.trim().toLowerCase();
-  document.querySelectorAll("#qaList details").forEach((d,i)=>{
+  document.querySelectorAll("#qaList details").forEach((d)=>{
     const item = QA[+d.dataset.i];
     const hay = (item.q+" "+item.tags+" "+item.a.map(a=>a.en+a.ko).join(" ")).toLowerCase();
     const hit = !q || hay.includes(q);
@@ -457,25 +589,23 @@ function filterQA(){
   });
 }
 
-// SOS
-$("#sosInline").innerHTML = SOS.map(l=>lineHTML(l)).join("");
-$("#sheetBody").innerHTML = SOS.map(l=>lineHTML(l)).join("");
-
 /* ================= PRESENTER ================= */
 let cur=0;
 function renderP(){
-  const d=DECK[cur];
+  const deck=activeDeck();
+  if(cur>deck.length-1) cur=deck.length-1;
+  const d=deck[cur];
   $("#pTitle").textContent = `${cur+1}. ${d.title}`;
-  $("#pPos").textContent = `${cur+1} / ${DECK.length}`;
+  $("#pPos").textContent = `${cur+1} / ${deck.length}`;
   $("#pCard").innerHTML = `<span class="pchip">${d.icon} ${d.title}</span>` +
-    d.lines.map(l=>`<div class="pline ${l.key?'key':''}"><div class="en">${l.en}</div><div class="ko">${l.ko}</div></div>`).join("") +
+    d.lines.map(l=>`<div class="pline ${l.key?'key':''}"><div class="en">${l.en}</div><div class="ko">${l.ko||''}</div></div>`).join("") +
     (d.note?`<div class="pnote">💡 ${d.note}</div>`:"");
-  $("#pDots").innerHTML = DECK.map((_,i)=>`<i class="${i===cur?'on':''}" onclick="jump(${i})"></i>`).join("");
+  $("#pDots").innerHTML = deck.map((_,i)=>`<i class="${i===cur?'on':''}" onclick="jump(${i})"></i>`).join("");
   $("#pPrev").disabled = cur===0;
-  $("#pNext").textContent = cur===DECK.length-1 ? "처음으로 ⟳" : "다음 →";
+  $("#pNext").textContent = cur===deck.length-1 ? "처음으로 ⟳" : "다음 →";
   $(".pstage").scrollTop=0;
 }
-function go(d){ if(d>0 && cur===DECK.length-1){cur=0;} else {cur=Math.min(DECK.length-1,Math.max(0,cur+d));} renderP(); }
+function go(d){ const n=activeDeck().length; if(d>0 && cur===n-1){cur=0;} else {cur=Math.min(n-1,Math.max(0,cur+d));} renderP(); }
 function jump(i){ cur=i; renderP(); }
 
 /* ================= MODE / THEME / FONT ================= */
@@ -500,7 +630,6 @@ function fontStep(d){ fs=Math.min(3.2,Math.max(1.2,fs+d*0.2)); document.document
 function openSheet(){ $("#sheet").classList.add("show"); }
 function closeSheet(){ $("#sheet").classList.remove("show"); }
 
-// keyboard (presenter)
 document.addEventListener("keydown", e=>{
   if(!$("#presenter").classList.contains("show")) return;
   if(e.key==="ArrowRight"||e.key===" "||e.key==="PageDown"){e.preventDefault();go(1);}
@@ -513,7 +642,9 @@ document.addEventListener("keydown", e=>{
   try{
     const t=localStorage.getItem("aivari-theme"); if(t==="dark"){document.documentElement.setAttribute("data-theme","dark");$("#themeBtn").textContent="☀️";}
     const f=parseFloat(localStorage.getItem("aivari-fs")); if(f){fs=f;document.documentElement.style.setProperty("--en-size",fs+"rem");}
+    const v=localStorage.getItem("aivari-ver"); if(v && VERSIONS[v]) curVer=v;
   }catch(e){}
+  renderVerSwitch(); renderStudyDeck();
 })();
 </script>
 </body>
