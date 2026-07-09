@@ -28,14 +28,18 @@
   body{
     margin:0; background:var(--bg); color:var(--ink);
     font-family:"Pretendard","Apple SD Gothic Neo",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans KR",sans-serif;
-    line-height:1.55; -webkit-font-smoothing:antialiased;
+    line-height:1.55; -webkit-font-smoothing:antialiased; overflow-x:hidden;
   }
   a{color:var(--brand)}
   .wrap{max-width:var(--maxw); margin:0 auto; padding:0 18px}
 
-  header{position:sticky; top:0; z-index:40; background:color-mix(in srgb,var(--bg) 88%, transparent); backdrop-filter:saturate(1.4) blur(10px); border-bottom:1px solid var(--line);}
-  .bar{display:flex; align-items:center; gap:10px; padding:10px 0}
-  .brandmark{font-weight:800; letter-spacing:-.01em; font-size:1.02rem; display:flex; align-items:center; gap:8px; white-space:nowrap}
+  header{position:sticky; top:0; z-index:40; background:color-mix(in srgb,var(--bg) 90%, transparent); backdrop-filter:saturate(1.4) blur(10px); border-bottom:1px solid var(--line);}
+  .hbar{max-width:var(--maxw); margin:0 auto; padding:14px 18px}
+  .hrow{display:flex; align-items:center; gap:10px}
+  .brandmark{font-weight:800; letter-spacing:-.01em; font-size:1rem; display:flex; align-items:center; gap:8px; white-space:nowrap; min-width:0; overflow:hidden}
+  .brandmark .full{color:var(--muted); font-weight:700; overflow:hidden; text-overflow:ellipsis}
+  .toolbar{display:flex; gap:12px; align-items:center; margin-top:14px}
+  .toolbar .search{flex:1; min-width:0; padding:10px 14px; font-size:.92rem}
   .dot{width:10px;height:10px;border-radius:50%;background:var(--brand);box-shadow:0 0 0 4px var(--brand-soft)}
   .spacer{flex:1}
   .seg{display:inline-flex; background:var(--panel); border:1px solid var(--line); border-radius:999px; padding:3px; box-shadow:var(--shadow)}
@@ -48,7 +52,7 @@
   .vswitch button.on{background:var(--brand); color:#fff}
   .vswitch button .vsub{display:block; font-size:.68rem; font-weight:600; opacity:.8; margin-top:1px}
 
-  main{padding:22px 0 120px}
+  main{padding:24px 0 120px}
   .hero{background:linear-gradient(135deg,var(--brand),#3a63e6); color:#fff; border-radius:18px; padding:18px 20px; box-shadow:var(--shadow); position:relative; overflow:hidden;}
   .hero:after{content:""; position:absolute; right:-40px; top:-40px; width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.08)}
   .hero .eyebrow{opacity:.85; font-weight:700; font-size:.8rem; letter-spacing:.08em; text-transform:uppercase}
@@ -60,14 +64,12 @@
   .nav a{font-size:.85rem; font-weight:700; text-decoration:none; color:var(--muted); background:var(--panel); border:1px solid var(--line); padding:8px 12px; border-radius:999px}
   .nav a:hover{color:var(--brand); border-color:var(--brand)}
 
-  .bar2{display:flex; gap:8px; padding:0 0 10px; align-items:center}
-  .bar2 .search{flex:1; min-width:0; padding:9px 14px; font-size:.9rem}
-  .tabs{display:flex; gap:6px; flex:none; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none}
+  .tabs{display:flex; gap:8px; flex:none; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none}
   .tabs::-webkit-scrollbar{display:none}
-  .tabs button{border:1px solid var(--line); background:var(--panel); color:var(--muted); font-weight:750; font-size:.84rem; padding:8px 12px; border-radius:999px; cursor:pointer; white-space:nowrap}
+  .tabs button{border:1px solid var(--line); background:var(--panel); color:var(--muted); font-weight:750; font-size:.85rem; padding:9px 14px; border-radius:999px; cursor:pointer; white-space:nowrap}
   .tabs button.on{background:var(--brand); color:#fff; border-color:var(--brand)}
   .tabpanel[hidden]{display:none}
-  @media (max-width:560px){ .bar2{flex-wrap:wrap} .tabs{width:100%} }
+  @media (max-width:600px){ .toolbar{flex-direction:column; align-items:stretch; gap:10px; margin-top:12px} .tabs{width:100%} }
 
   section.block{margin-top:26px}
   .block-h{display:flex; align-items:center; gap:10px; margin:0 0 12px}
@@ -173,10 +175,10 @@
 
   .foot{margin-top:36px; text-align:center; color:var(--muted); font-size:.8rem}
 
-  @media (max-width:560px){
-    .hero h1{font-size:1.25rem}
+  @media (max-width:600px){
+    .hero h1{font-size:1.2rem}
     :root{--en-size:1.5rem}
-    .brandmark span.full{display:none}
+    .brandmark .full{display:none}
     .pm-results{grid-template-columns:1fr}
   }
   @media print{
@@ -190,22 +192,24 @@
 </head>
 <body>
 <header>
-  <div class="wrap bar">
-    <div class="brandmark"><span class="dot"></span> AIVARI <span class="full">포스터 컨닝페이퍼</span></div>
-    <div class="spacer"></div>
-    <div class="seg" role="tablist">
-      <button id="tabStudy" class="on" onclick="setMode('study')">학습</button>
-      <button id="tabPres" onclick="setMode('present')">발표</button>
+  <div class="hbar">
+    <div class="hrow">
+      <div class="brandmark"><span class="dot"></span> AIVARI <span class="full">포스터 컨닝페이퍼</span></div>
+      <div class="spacer"></div>
+      <div class="seg" role="tablist">
+        <button id="tabStudy" class="on" onclick="setMode('study')">학습</button>
+        <button id="tabPres" onclick="setMode('present')">발표</button>
+      </div>
+      <button class="iconbtn" onclick="toggleTheme()" title="라이트/다크" id="themeBtn">🌙</button>
     </div>
-    <button class="iconbtn" onclick="toggleTheme()" title="라이트/다크" id="themeBtn">🌙</button>
-  </div>
-  <div class="wrap bar2" id="studybar">
-    <input class="search" id="qaSearch" placeholder="🔎 검색: 질문·지표·키워드 (NPV, tool, ANKRD11, 자동…)" oninput="onSearch()" />
-    <div class="tabs" id="tabs">
-      <button data-tab="deck" class="on" onclick="showTab('deck')">🎤 대본</button>
-      <button data-tab="map" onclick="showTab('map')">🗺️ 지도</button>
-      <button data-tab="num" onclick="showTab('num')">📊 숫자·지표</button>
-      <button data-tab="qa" onclick="showTab('qa')">💬 Q&amp;A</button>
+    <div class="toolbar" id="studybar">
+      <input class="search" id="qaSearch" placeholder="🔎 검색: 질문·지표·키워드 (NPV, tool, ANKRD11…)" oninput="onSearch()" />
+      <div class="tabs" id="tabs">
+        <button data-tab="deck" class="on" onclick="showTab('deck')">🎤 대본</button>
+        <button data-tab="map" onclick="showTab('map')">🗺️ 지도</button>
+        <button data-tab="num" onclick="showTab('num')">📊 숫자·지표</button>
+        <button data-tab="qa" onclick="showTab('qa')">💬 Q&amp;A</button>
+      </div>
     </div>
   </div>
 </header>
